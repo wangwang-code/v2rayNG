@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.v2ray.ang.util.MyContextWrapper
 import com.v2ray.ang.util.Utils
+import com.v2ray.ang.util.Utils.setDaynight
 
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +35,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val context = newBase?.let {
             MyContextWrapper.wrap(newBase,  Utils.getLocale(newBase))
         }
+        setDaynight() //现在这里加，用于重启后重新使偏好生效
         super.attachBaseContext(context)
     }
 }

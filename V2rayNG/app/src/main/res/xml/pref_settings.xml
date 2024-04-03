@@ -123,6 +123,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_ui_settings">
+        <ListPreference
+            android:defaultValue="auto"
+            android:entries="@array/daynight_select"
+            android:entryValues="@array/daynight_select_value"
+            android:key="pref_daynight_mode"
+            android:summary="%s"
+            android:title="@string/title_pref_daynight_mode" />
+
         <CheckBoxPreference
             android:key="pref_speed_enabled"
             android:summary="@string/summary_pref_speed_enabled"

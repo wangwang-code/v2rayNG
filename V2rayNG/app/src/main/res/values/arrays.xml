@@ -167,6 +167,11 @@
         <item>240.0.0.0/4</item>
     </string-array>
 
+    <string-array name="daynight_select" translatable="false">
+        <item>auto</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
 
     <string-array name="language_select" translatable="false">
         <item>auto</item>
@@ -189,6 +194,12 @@
         <item>ru</item>
         <item>fa</item>
         <item>ar</item>
+    </string-array>
+
+    <string-array name="daynight_select_value" translatable="true">
+        <item>auto</item>
+        <item>day</item>
+        <item>night</item>
     </string-array>
 
     <string-array name="mux_xudp_quic_value" translatable="false">

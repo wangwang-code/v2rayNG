@@ -17,6 +17,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
+import androidx.appcompat.app.AppCompatDelegate
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.AppConfig.ANG_PACKAGE
@@ -359,7 +360,7 @@ object Utils {
             it.bufferedReader().readText()
         }
     }
-
+    //@a-pav 下面是用来更新状态栏的
     fun getDarkModeStatus(context: Context): Boolean {
         val mode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
         return mode != UI_MODE_NIGHT_NO
@@ -384,7 +385,14 @@ object Utils {
             "fa" -> Locale("fa")
             else -> getSysLocale()
         }
-
+    //先这样写着，又不是不能用
+    fun setDaynight() {
+        when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+            "auto" ->  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            "day" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "night" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+    }
     private fun getSysLocale(): Locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         LocaleList.getDefault()[0]
     } else {

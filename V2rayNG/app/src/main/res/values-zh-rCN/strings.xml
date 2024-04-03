@@ -266,5 +266,11 @@
         <item>VPN</item>
         <item>仅代理</item>
     </string-array>
+    <string name="title_pref_daynight_mode">深色模式</string>
+    <string-array name="daynight_select">
+        <item>auto</item>
+        <item>白天</item>
+        <item>黑夜</item>
+    </string-array>
 
 </resources>
