@@ -360,10 +360,10 @@ object Utils {
             it.bufferedReader().readText()
         }
     }
-    //@a-pav 下面是用来更新状态栏的
     fun getDarkModeStatus(context: Context): Boolean {
+        setDaynight()//改到这
         val mode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
-        return mode != UI_MODE_NIGHT_NO
+        return mode != UI_MODE_NIGHT_NO //@a-pav 这里用来告诉状态栏
     }
 
     fun getIpv6Address(address: String): String {
@@ -386,6 +386,7 @@ object Utils {
             else -> getSysLocale()
         }
     //先这样写着，又不是不能用
+    //有个特性 改黑夜后状态栏不会更新（白改黑） 冷启动的开屏仍然遵循系统
     fun setDaynight() {
         when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
             "auto" ->  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)

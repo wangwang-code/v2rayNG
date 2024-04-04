@@ -35,7 +35,6 @@ abstract class BaseActivity : AppCompatActivity() {
         val context = newBase?.let {
             MyContextWrapper.wrap(newBase,  Utils.getLocale(newBase))
         }
-        setDaynight() //现在这里加，用于重启后重新使偏好生效
         super.attachBaseContext(context)
     }
 }

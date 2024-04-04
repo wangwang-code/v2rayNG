@@ -3,12 +3,12 @@ package com.v2ray.ang.viewmodel
 import android.app.Application
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.util.MmkvManager
+import com.v2ray.ang.util.Utils
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -58,18 +58,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             AppConfig.PREF_BYPASS_APPS,
             AppConfig.PREF_CONFIRM_REMOVE,
             AppConfig.PREF_START_SCAN_IMMEDIATE,
-            AppConfig.PREF_DAYNIGHT_MODE -> {
-                if (key.toString() == "pref_daynight_mode") {//不知道为什么，首次启动pref_per_app_proxy的触发会运行到这里，然后key还是个布尔
-                 settingsStorage?.encode(key, sharedPreferences.getString(key, "auto"))
-                //下面用于即时生效。埋一个BUG 状态栏不会跟着一起，除非重新渲染触发getDarkModeStatus
-                val dayNightMode = sharedPreferences.getString(AppConfig.PREF_DAYNIGHT_MODE, "auto")
-                when (dayNightMode) {
-                    "auto" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    "day" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    "night" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-                }
-            }
+
             AppConfig.SUBSCRIPTION_AUTO_UPDATE,
             AppConfig.PREF_FRAGMENT_ENABLED,
             AppConfig.PREF_MUX_ENABLED, -> {
@@ -84,6 +73,11 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
             AppConfig.PREF_PER_APP_PROXY_SET -> {
                 settingsStorage?.encode(key, sharedPreferences.getStringSet(key, setOf()))
+            }
+            //别问为什么放这里，放前面会抛异常，实时流量也不能正常显示
+            AppConfig.PREF_DAYNIGHT_MODE -> {
+                settingsStorage?.encode(key, sharedPreferences.getString(key, "auto"))
+                Utils.setDaynight()//立即更新
             }
         }
     }
