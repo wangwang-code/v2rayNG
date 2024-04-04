@@ -25,6 +25,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.tencent.mmkv.MMKV
@@ -58,9 +59,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
     private var mItemTouchHelper: ItemTouchHelper? = null
     val mainViewModel: MainViewModel by viewModels()
-
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT <= 30) {Utils.setDaynight(null)}
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)

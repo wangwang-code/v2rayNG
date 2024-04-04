@@ -1,11 +1,9 @@
 package com.v2ray.ang.util
 
+import android.app.UiModeManager
+import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.text.Editable
-import android.util.Base64
-import java.util.*
-import android.content.ClipData
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration.UI_MODE_NIGHT_MASK
@@ -14,19 +12,24 @@ import android.net.Uri
 import android.os.Build
 import android.os.LocaleList
 import android.provider.Settings
+import android.text.Editable
+import android.util.Base64
 import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate.*
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.AppConfig.ANG_PACKAGE
 import com.v2ray.ang.BuildConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.extension.toast
-import java.net.*
 import com.v2ray.ang.service.V2RayServiceManager
 import java.io.IOException
+import java.net.*
+import java.util.*
+
 
 object Utils {
 
@@ -361,7 +364,6 @@ object Utils {
         }
     }
     fun getDarkModeStatus(context: Context): Boolean {
-        setDaynight()//改到这
         val mode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
         return mode != UI_MODE_NIGHT_NO //@a-pav 这里用来告诉状态栏
     }
@@ -386,12 +388,37 @@ object Utils {
             else -> getSysLocale()
         }
     //先这样写着，又不是不能用
-    //有个特性 改黑夜后状态栏不会更新（白改黑） 冷启动的开屏仍然遵循系统
-    fun setDaynight() {
-        when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
-            "auto" ->  AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            "day" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "night" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    //有个特性 setApplicationNightMode会发生闪烁
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun setDaynight(context: Context?) {
+        if (context != null) {
+            val uim = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+                "auto" -> {
+                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+                }
+                "day" -> {
+                    setDefaultNightMode(MODE_NIGHT_NO)
+                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
+                }
+                "night" -> {
+                    setDefaultNightMode(MODE_NIGHT_YES)
+                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
+                }
+            }
+        } else {
+            when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+                "auto" -> {
+                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                "day" -> {
+                    setDefaultNightMode(MODE_NIGHT_NO)
+                }
+                "night" -> {
+                    setDefaultNightMode(MODE_NIGHT_YES)
+                }
+            }
         }
     }
     private fun getSysLocale(): Locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

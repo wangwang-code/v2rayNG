@@ -2,7 +2,9 @@ package com.v2ray.ang.viewmodel
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import com.tencent.mmkv.MMKV
@@ -13,7 +15,6 @@ import com.v2ray.ang.util.Utils
 class SettingsViewModel(application: Application) : AndroidViewModel(application), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val settingsStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_SETTING, MMKV.MULTI_PROCESS_MODE) }
-
     fun startListenPreferenceChange() {
         PreferenceManager.getDefaultSharedPreferences(getApplication()).registerOnSharedPreferenceChangeListener(this)
     }
@@ -24,6 +25,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         super.onCleared()
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.d(AppConfig.ANG_PACKAGE, "Observe settings changed: $key")
         when(key) {
@@ -77,7 +79,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             //别问为什么放这里，放前面会抛异常，实时流量也不能正常显示
             AppConfig.PREF_DAYNIGHT_MODE -> {
                 settingsStorage?.encode(key, sharedPreferences.getString(key, "auto"))
-                Utils.setDaynight()//立即更新
+                if (Build.VERSION.SDK_INT > 30 ) Utils.setDaynight(getApplication())
+                else Utils.setDaynight(null)
             }
         }
     }

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.v2ray.ang.util.MyContextWrapper
 import com.v2ray.ang.util.Utils
-import com.v2ray.ang.util.Utils.setDaynight
 
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
