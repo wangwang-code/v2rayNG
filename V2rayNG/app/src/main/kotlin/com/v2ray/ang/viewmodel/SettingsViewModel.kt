@@ -10,7 +10,6 @@ import androidx.preference.PreferenceManager
 import com.tencent.mmkv.MMKV
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.util.MmkvManager
-import com.v2ray.ang.util.Utils
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -77,11 +76,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 settingsStorage?.encode(key, sharedPreferences.getStringSet(key, setOf()))
             }
             //别问为什么放这里，放前面会抛异常，实时流量也不能正常显示
-            AppConfig.PREF_DAYNIGHT_MODE -> {
-                settingsStorage?.encode(key, sharedPreferences.getString(key, "auto"))
-                if (Build.VERSION.SDK_INT > 30 ) Utils.setDaynight(getApplication())
-                else Utils.setDaynight(null)
-            }
+            AppConfig.PREF_DAYNIGHT_MODE -> {}
         }
     }
 }

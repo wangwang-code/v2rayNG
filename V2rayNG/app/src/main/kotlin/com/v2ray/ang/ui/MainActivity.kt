@@ -62,7 +62,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT <= 30) {Utils.setDaynight(null)}
+        if (Build.VERSION.SDK_INT > 30) Utils.upDaynightNewApi(this)
+        else Utils.upDaynight()
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)

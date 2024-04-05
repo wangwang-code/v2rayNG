@@ -48,7 +48,6 @@
 
         <activity
             android:name=".ui.MainActivity"
-            android:configChanges="uiMode"
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeDayNight.NoActionBar">

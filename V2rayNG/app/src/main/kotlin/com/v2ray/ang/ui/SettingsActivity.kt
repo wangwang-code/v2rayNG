@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.preference.*
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -57,9 +58,10 @@ class SettingsActivity : BaseActivity() {
         //        val licenses: Preference by lazy { findPreference(PREF_LICENSES) }
 //        val feedback: Preference by lazy { findPreference(PREF_FEEDBACK) }
 //        val tgGroup: Preference by lazy { findPreference(PREF_TG_GROUP) }
-
+        private val dayNight by lazy { findPreference<ListPreference>(AppConfig.PREF_DAYNIGHT_MODE) }
         private val mode by lazy { findPreference<ListPreference>(AppConfig.PREF_MODE) }
 
+        @RequiresApi(31)
         override fun onCreatePreferences(bundle: Bundle?, s: String?) {
             addPreferencesFromResource(R.xml.pref_settings)
 
@@ -156,6 +158,11 @@ class SettingsActivity : BaseActivity() {
             }
             mode?.setOnPreferenceChangeListener { _, newValue ->
                 updateMode(newValue.toString())
+                true
+            }
+            dayNight?.setOnPreferenceChangeListener { _, any ->
+                val nval = any as String
+                context?.let { Utils.setDaynight(nval, it) }
                 true
             }
             mode?.dialogLayoutResource = R.layout.preference_with_help_link

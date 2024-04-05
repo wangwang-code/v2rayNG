@@ -389,35 +389,55 @@ object Utils {
         }
     //先这样写着，又不是不能用
     //有个特性 setApplicationNightMode会发生闪烁
-    @RequiresApi(Build.VERSION_CODES.S)
-    fun setDaynight(context: Context?) {
-        if (context != null) {
-            val uim = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-            when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+    fun setDaynight(nval: String, context: Context) {
+        settingsStorage?.encode(AppConfig.PREF_DAYNIGHT_MODE, nval)
+        when (nval) {
                 "auto" -> {
                     setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+                    if (Build.VERSION.SDK_INT > 30) {
+                        val uim = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+                        uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+                    }
                 }
-                "day" -> {
-                    setDefaultNightMode(MODE_NIGHT_NO)
-                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
-                }
-                "night" -> {
-                    setDefaultNightMode(MODE_NIGHT_YES)
-                    uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
-                }
+
+            "day" -> {
+                setDefaultNightMode(MODE_NIGHT_NO)
             }
-        } else {
-            when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
-                "auto" -> {
-                    setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
-                }
-                "day" -> {
-                    setDefaultNightMode(MODE_NIGHT_NO)
-                }
-                "night" -> {
-                    setDefaultNightMode(MODE_NIGHT_YES)
-                }
+
+            "night" -> {
+                setDefaultNightMode(MODE_NIGHT_YES)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    fun upDaynightNewApi(context: Context) {
+        val uim = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val mode = context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK
+        when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+            "auto" -> {
+                uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+            }
+            "day" -> {
+                if (mode != 16) uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
+            }
+            "night" -> {
+                if (mode != 32) uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
+            }
+        }
+    }
+    fun upDaynight() {
+        when (settingsStorage?.decodeString(AppConfig.PREF_DAYNIGHT_MODE) ?: "auto") {
+            "auto" -> {
+                setDefaultNightMode(MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+
+            "day" -> {
+                setDefaultNightMode(MODE_NIGHT_NO)
+            }
+
+            "night" -> {
+                setDefaultNightMode(MODE_NIGHT_YES)
             }
         }
     }
