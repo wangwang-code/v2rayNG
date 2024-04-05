@@ -30,6 +30,7 @@
             android:title="@string/title_pref_local_dns_port" />
 
         <EditTextPreference
+            android:defaultValue="https://223.5.5.5/dns-query"
             android:key="pref_vpn_dns"
             android:summary="@string/summary_pref_remote_dns"
             android:title="@string/title_pref_vpn_dns" />
@@ -50,7 +51,7 @@
             android:title="@string/title_pref_routing_custom" />
 
         <ListPreference
-            android:defaultValue="0"
+            android:defaultValue="3"
             android:entries="@array/routing_mode"
             android:entryValues="@array/routing_mode_value"
             android:key="pref_routing_mode"
@@ -188,11 +189,13 @@
             android:title="@string/title_pref_http_port" />
 
         <EditTextPreference
+            android:defaultValue="https://1.1.1.1/dns-query"
             android:key="pref_remote_dns"
             android:summary="@string/summary_pref_remote_dns"
             android:title="@string/title_pref_remote_dns" />
 
         <EditTextPreference
+            android:defaultValue="223.5.5.5"
             android:key="pref_domestic_dns"
             android:summary="@string/summary_pref_domestic_dns"
             android:title="@string/title_pref_domestic_dns" />
