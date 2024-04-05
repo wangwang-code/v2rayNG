@@ -179,7 +179,7 @@ object V2rayConfigUtil {
             )
             routingUserRule(
                 settingsStorage?.decodeString(AppConfig.PREF_V2RAY_ROUTING_DIRECT)
-                    ?: AppConfig.DNS_DIRECT, AppConfig.TAG_DIRECT, v2rayConfig
+                    ?: "", AppConfig.TAG_DIRECT, v2rayConfig
             )
             routingUserRule(
                 settingsStorage?.decodeString(AppConfig.PREF_V2RAY_ROUTING_BLOCKED)
@@ -191,7 +191,7 @@ object V2rayConfigUtil {
                     ?: "IPIfNonMatch"
 //            v2rayConfig.routing.domainMatcher = "mph"
             val routingMode = settingsStorage?.decodeString(AppConfig.PREF_ROUTING_MODE)
-                ?: ERoutingMode.BYPASS_LAN_MAINLAND.value
+                ?: ERoutingMode.GLOBAL_PROXY.value
 
             // Hardcode googleapis.cn
             val googleapisRoute = V2rayConfig.RoutingBean.RulesBean(
@@ -328,7 +328,7 @@ object V2rayConfigUtil {
                 )
                 val directDomain = userRule2Domian(
                     settingsStorage?.decodeString(AppConfig.PREF_V2RAY_ROUTING_DIRECT)
-                        ?: AppConfig.DNS_DIRECT
+                        ?: ""
                 )
                 // fakedns with all domains to make it always top priority
                 v2rayConfig.dns.servers?.add(
@@ -421,10 +421,10 @@ object V2rayConfigUtil {
             // domestic DNS
             val directDomain = userRule2Domian(
                 settingsStorage?.decodeString(AppConfig.PREF_V2RAY_ROUTING_DIRECT)
-                    ?: AppConfig.DNS_DIRECT
+                    ?: ""
             )
             val routingMode = settingsStorage?.decodeString(AppConfig.PREF_ROUTING_MODE)
-                ?: ERoutingMode.BYPASS_LAN_MAINLAND.value
+                ?: ERoutingMode.GLOBAL_PROXY.value
             if (directDomain.size > 0 || routingMode == ERoutingMode.BYPASS_MAINLAND.value || routingMode == ERoutingMode.BYPASS_LAN_MAINLAND.value) {
                 val domesticDns = Utils.getDomesticDnsServers()
                 val geositeCn = arrayListOf("geosite:cn")
