@@ -1,5 +1,6 @@
 package com.v2ray.ang.util
 
+import android.app.UiModeManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -373,10 +374,19 @@ object Utils {
     }
 
     fun setNightMode(context: Context) {
-        when (settingsStorage?.decodeString(AppConfig.PREF_UI_MODE_NIGHT, "0")) {
-            "0" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            "1" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            "2" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        if (Build.VERSION.SDK_INT > 30 ) {
+            val uim = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            when (settingsStorage?.decodeString(AppConfig.PREF_UI_MODE_NIGHT, "0")) {
+                "0" -> uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_AUTO)
+                "1" -> uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_NO)
+                "2" -> uim.setApplicationNightMode(UiModeManager.MODE_NIGHT_YES)
+            }
+        } else {
+            when (settingsStorage?.decodeString(AppConfig.PREF_UI_MODE_NIGHT, "0")) {
+                "0" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                "1" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                "2" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
         }
     }
 
